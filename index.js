@@ -34,6 +34,9 @@ function Fuzzer(options){
   this.fuzzedPackets = 0;
   this.socket = '';
 
+  this.fuzzOptions = {};
+  this.fuzzOptions.delay = 1000;
+
 
   this.dataStream = '';
 
@@ -50,6 +53,7 @@ Fuzzer.prototype.setOption = function(name, value){
   assert(name, null);
   assert(value, null);
   this.connectOptions[name] = value;
+  this.fuzzOptions[name] = value;
 return this;
 }
 
@@ -81,11 +85,15 @@ Fuzzer.prototype.radamsaFuzz = function(sock, payload, delay, no_repeat){
     sock.on('end', function(data){
       debug('end', 'closing radamsa fuzz socket');
       clearInterval(repeat);
+      // Fuzz again
+      Fuzzer.prototype.radamsaFuzz(sock, payload, delay);
     });
 
     sock.on('error', function(data){
       debug('error', data);
       clearInterval(repeat);
+      // Fuzz again
+      Fuzzer.prototype.radamsaFuzz(sock, payload, delay);
     });
   }
 
@@ -101,7 +109,7 @@ Fuzzer.prototype.start = function(){
 
   for(var i=0; i<this.payloads.length; i++){
     // socket, payload, delay
-    this.radamsaFuzz(sock, this.payloads[i], 1000);
+    this.radamsaFuzz(sock, this.payloads[i], this.fuzzOptions.delay);
   }
   sock.on('data', function(data){
     debug('data', data.toString());

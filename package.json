@@ -1,6 +1,6 @@
 {
   "name": "fuzzcat",
-  "version": "0.2.3",
+  "version": "0.2.6",
   "description": "Fuzzing services in style",
   "main": "index.js",
   "scripts": {
