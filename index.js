@@ -26,7 +26,7 @@ function Fuzzer(options){
   this.connectOptions.port = this.port;
   if(this.clientKey)  this.connectOptions.key = fs.readFileSync(this.clientKey);
   if(this.clientCert)  this.connectOptions.cert = fs.readFileSync(this.clientCert);
-  if(this.clientCa) this.connectOptions.ca = fs.readFileSync('./certs/ca.pem');
+  if(this.ca) this.connectOptions.ca = fs.readFileSync(this.ca);
   this.connectOptions.rejectUnauthorized = false;
 
 
@@ -70,7 +70,7 @@ Fuzzer.prototype.radamsaFuzz = function(sock, payload, delay, no_repeat){
   var fuzz = radamsa.fromBuffer(payload);
   delay = delay || 10;
   if(no_repeat !== undefined){
-    fuzz.on('data', function(data){
+    fuzz.once('data', function(data){
       debug('fuzz data:', data);
       sock.write(new Buffer(data));
     })
@@ -78,17 +78,16 @@ Fuzzer.prototype.radamsaFuzz = function(sock, payload, delay, no_repeat){
     var repeat = setInterval(function(){
       Fuzzer.prototype.radamsaFuzz(sock, payload, null, true);
     }, delay);
+    sock.on('end', function(data){
+      debug('end', 'closing radamsa fuzz socket');
+      clearInterval(repeat);
+    });
+
+    sock.on('error', function(data){
+      debug('error', data);
+      clearInterval(repeat);
+    });
   }
-
-  sock.once('end', function(data){
-    debug('end', 'closing radamsa fuzz socket');
-    clearInterval(repeat);
-  });
-
-  sock.on('error', function(data){
-    debug('error', data);
-    clearInterval(repeat);
-  });
 
 
 return this;
