@@ -1,0 +1,36 @@
+{
+  "name": "fuzzcat",
+  "version": "0.1.0",
+  "description": "Fuzzing services in style",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ./test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skepticfx/fuzzcat"
+  },
+  "keywords": [
+    "fuzzer",
+    "radamsa",
+    "security",
+    "fuzzing",
+    "fuzz",
+    "tool"
+  ],
+  "author": "Ahamed Nafeez <ahamed.nafeez@gmail.com> (http://blog.skepticfx.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/skepticfx/fuzzcat/issues"
+  },
+  "homepage": "https://github.com/skepticfx/fuzzcat",
+  "dependencies": {
+    "debug": "^2.0.0",
+    "should": "^4.0.4",
+    "node-radamsa": "^0.1.0",
+    "tlsecho": "^0.3.0"
+  },
+  "devDependencies": {
+    "mocha": "^1.21.4"
+  }
+}
