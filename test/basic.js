@@ -41,9 +41,6 @@ describe('ping/pong', function(){
     before(function(done){
       server = net.createServer(function(sock){
         sock.pipe(sock);
-        sock.on('data', function(data){
-          console.log(data)
-        })
       });
       server.listen(tcpPort, done);
     })
@@ -55,7 +52,6 @@ describe('ping/pong', function(){
         .setOption('host', '127.0.0.1')
         .setOption('port', tcpPort)
         .addPayload(new Buffer([0x01, 0x0A, 0x09, 0x00]))
-        //.logFuzz()
         .start();
 
       server.on('connection', function(sock){

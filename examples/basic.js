@@ -1,12 +1,17 @@
-var fuzzcat = require('../'); // require('fuzzcat')
+var fuzzcat = require('fuzzcat');
 
-var basicFuzz = new fuzzcat.Fuzzer({
-  "host": "127.0.0.1",
-  "port": 8000,
-  "enableSSL": true
+var fuzzer = new fuzzcat.Fuzzer({
+  'host': '127.0.0.1',
+  'port': '443',
+  'enableSSL': true,
+  'clientKey': 'client.pem',
+  'clientCert': 'client.pem',
+  'ca': 'ca.pem'
 });
 
 
-basicFuzz
-  .addPayload('../fixtures/payloads/payload1.txt')
+fuzzer
+  .addPayload(new Buffer("1000050101000000210000000afcf21f0000", 'hex'))
+  .logFuzz()
+  .setOption('delay', 1000)
   .start()
