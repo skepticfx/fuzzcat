@@ -4,6 +4,9 @@ var net = require('net');
 var fs = require('fs');
 var assert = require('assert');
 var debug = require('debug')('fuzzcat');
+var appServer = require('./server');
+var events = require('events');
+var util = require('util');
 
 function Fuzzer(options){
 
@@ -14,7 +17,7 @@ function Fuzzer(options){
   this.enableSSL = options.enableSSL || false;
   this.clientKey = options.clientKey || null;
   this.clientCert = options.clientCert || null;
-  this.clientCa = options.clientCa || null;
+  this.ca = options.ca || null;
 
   this.logFuzz = function(){
     debug = console.log;
@@ -48,6 +51,7 @@ function Fuzzer(options){
 
 }
 
+util.inherits(Fuzzer, events.EventEmitter);
 
 Fuzzer.prototype.setOption = function(name, value){
   assert(name, null);
@@ -70,30 +74,31 @@ Fuzzer.prototype.addPayload = function(data){
 return this;
 }
 
-Fuzzer.prototype.radamsaFuzz = function(sock, payload, delay, no_repeat){
+Fuzzer.prototype.radamsaFuzz = function(sock, payload, delay, no_repeat, _global){
   var fuzz = radamsa.fromBuffer(payload);
   delay = delay || 10;
-  if(no_repeat !== undefined){
+  if(no_repeat !== undefined && no_repeat !== null){
     fuzz.once('data', function(data){
       debug('fuzz data:', data);
       sock.write(new Buffer(data));
+      _global.fuzzedPackets++;
     })
   } else {
     var repeat = setInterval(function(){
-      Fuzzer.prototype.radamsaFuzz(sock, payload, null, true);
+      Fuzzer.prototype.radamsaFuzz(sock, payload, null, true, _global);
     }, delay);
     sock.on('end', function(data){
       debug('end', 'closing radamsa fuzz socket');
       clearInterval(repeat);
       // Fuzz again
-      Fuzzer.prototype.radamsaFuzz(sock, payload, delay);
+      Fuzzer.prototype.radamsaFuzz(sock, payload, delay, null, _global);
     });
 
     sock.on('error', function(data){
       debug('error', data);
       clearInterval(repeat);
       // Fuzz again
-      Fuzzer.prototype.radamsaFuzz(sock, payload, delay);
+      Fuzzer.prototype.radamsaFuzz(sock, payload, delay, null, _global);
     });
   }
 
@@ -108,14 +113,28 @@ Fuzzer.prototype.start = function(){
   this.dataStream = sock;
 
   for(var i=0; i<this.payloads.length; i++){
-    // socket, payload, delay
-    this.radamsaFuzz(sock, this.payloads[i], this.fuzzOptions.delay);
+    // socket, payload, delay, no_repeat, _global
+    this.radamsaFuzz(sock, this.payloads[i], this.fuzzOptions.delay, null, this);
   }
   sock.on('data', function(data){
     debug('data', data.toString());
   });
 
 }
+
+
+
+
+Fuzzer.prototype.serve = function(port){
+  var that = this;
+  appServer
+    .start(port, this)
+    .on('start', function(){
+      that.emit('serverStarted');
+    })
+return this;
+}
+
 
 
 exports.Fuzzer = Fuzzer;

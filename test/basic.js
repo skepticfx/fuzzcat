@@ -2,9 +2,13 @@ var should = require('should');
 var fuzzcat = require('../');
 var tlsecho = require('tlsecho');
 var net = require('net');
+var request = require('superagent');
 
 var tlsPort = 8000;
 var tcpPort = 8001;
+var serverPort = 4000;
+
+var serverURL = 'http://localhost:' + serverPort;
 
 describe('ping/pong', function(){
   this.timeout(5000);
@@ -63,6 +67,28 @@ describe('ping/pong', function(){
 
     })
 
+  })
+
+})
+
+
+
+
+describe('app server', function(){
+  before(function(done){
+    var fuzz = new fuzzcat.Fuzzer({});
+    fuzz.serve(serverPort);
+    fuzz.on('serverStarted', done)
+
+  })
+
+  it('test fuzzed packets - initial', function(done){
+    request
+      .get(serverURL + '/api/fuzzedPackets')
+      .end(function(err, res){
+        res.body.result.should.be.exactly(0);
+        done();
+      })
   })
 
 })
