@@ -80,7 +80,9 @@ Fuzzer.prototype.radamsaFuzz = function(sock, payload, delay, no_repeat, _global
   if(no_repeat !== undefined && no_repeat !== null){
     fuzz.once('data', function(data){
       debug('fuzz data:', data);
-      sock.write(new Buffer(data));
+      sock.write(new Buffer(data), function(){
+        _global.emit('packetSent', data)
+      });
       _global.fuzzedPackets++;
     })
   } else {

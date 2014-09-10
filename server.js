@@ -12,6 +12,21 @@ exports.start = function(port, fuzz){
     debug('Express server listening on port ' + server.address().port);
     app.set('fuzz', fuzz);
     EE.emit('start', app);
+
+    var io = require('socket.io')(server);
+    io.on('connection', function (socket) {
+      socket.emit('fuzzDetails', {
+        host: fuzz.connectOptions.host,
+        port: fuzz.connectOptions.port,
+        delay: fuzz.fuzzOptions.delay
+      });
+      app.set('websocket', io);
+    });
+
+    fuzz.on('packetSent', function(data){
+      io.emit('packetSent', data.length, fuzz.fuzzedPackets);
+    });
+
   });
 
 return EE;

@@ -1,11 +1,28 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title>Fuzzcat</title>
+    <link rel='stylesheet' type="text/css" href='/stylesheets/style.css'/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/epoch.min.css"/>
+    <script src="/javascripts/jquery-1.11.1.min.js"></script>
+    <script src="/javascripts/d3.js"></script>
+    <script src="/javascripts/epoch.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/line.js"></script>
+
   </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+  <body class="epoch-theme-dark">
+    <center><h1>Fuzzcat</h1></center>
+
+  <center>
+    <b>Host-</b> <span id="host"></span><br/>
+    <b>Port-</b> <span id="port"></span><br/>
+    <b>Fuzz Delay-</b> <span id="delay"></span><br/><br/>
+    <b> Packet Size - Realtime</b><br/><br/>
+    <div id="realtime" class="epoch category20d" style="width: 50%; height: 200px;"></div>
+    <b>Packets Fuzzed-</b> <span id="packetsFuzzed"></span>
+  </center>
+
+
   </body>
 </html>
