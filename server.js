@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 var debug = require('debug')('sever');
-var app = require('./app');
+var app = require('./lib/express/app');
 var events = require('events');
 
 exports.start = function(port, fuzz){
-
   var EE = new events.EventEmitter();
   app.set('port', port || 3000);
 
