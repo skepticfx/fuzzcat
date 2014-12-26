@@ -93,14 +93,18 @@ Fuzzer.prototype.radamsaFuzz = function(sock, payload, delay, no_repeat, _global
       debug('end', 'closing radamsa fuzz socket');
       clearInterval(repeat);
       // Fuzz again
-      Fuzzer.prototype.radamsaFuzz(sock, payload, delay, null, _global);
+      //Fuzzer.prototype.radamsaFuzz(sock, payload, delay, null, _global);
     });
 
     sock.on('error', function(data){
       debug('error', data);
       clearInterval(repeat);
       // Fuzz again
-      Fuzzer.prototype.radamsaFuzz(sock, payload, delay, null, _global);
+      // Fuzzer.prototype.radamsaFuzz(sock, payload, delay, null, _global);
+    });
+
+    sock.on('data', function(data){
+      debug('data', data.toString());
     });
   }
 
@@ -111,20 +115,55 @@ return this;
 
 Fuzzer.prototype.start = function(){
 
-  var sock = this.socket.connect(this.connectOptions);
-  this.dataStream = sock;
+  //var sock = this.socket.connect(this.connectOptions);
+  //this.dataStream = sock;
 
   for(var i=0; i<this.payloads.length; i++){
     // socket, payload, delay, no_repeat, _global
-    this.radamsaFuzz(sock, this.payloads[i], this.fuzzOptions.delay, null, this);
+    //this.radamsaFuzz(sock, this.payloads[i], this.fuzzOptions.delay, null, this);
+    this.customFuzz(this.payloads[i], this.fuzzOptions.delay, this);
   }
-  sock.on('data', function(data){
-    debug('data', data.toString());
-  });
+
 
 }
 
 
+// General fuzzing loop
+// 1. For the given payload keep passing the fuzz function and repeat
+// 2.
+
+
+Fuzzer.prototype.customFuzz = function(payload, delay, _global){
+
+  var timer = setInterval(function(){
+    var fuzz = radamsa.fromBuffer(payload);
+    fuzz.once('data', function(payload){
+      Fuzzer.prototype.sendPacket(payload, _global);
+    });
+  }, delay);
+
+}
+
+Fuzzer.prototype.sendPacket = function(payload, _global){
+  var sock = _global.socket.connect(_global.connectOptions);
+  sock.write(payload, function(){
+    _global.emit('packetSent', payload);
+    console.log(payload);
+  })
+
+  sock.on('end', function(data){
+    //debug('end', 'closing radamsa fuzz socket');
+  });
+
+  sock.on('error', function(data){
+    debug('error', data);
+  });
+
+  sock.on('data', function(data){
+    debug('data recieved', data.toString());
+  });
+
+}
 
 
 Fuzzer.prototype.serve = function(port){

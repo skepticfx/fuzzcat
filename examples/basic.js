@@ -1,12 +1,12 @@
-var fuzzcat = require('fuzzcat');
+var fuzzcat = require('../');
 
 var fuzzer = new fuzzcat.Fuzzer({
   'host': '127.0.0.1',
-  'port': '443',
-  'enableSSL': true,
-  'clientKey': 'client.pem',
-  'clientCert': 'client.pem',
-  'ca': 'ca.pem'
+  'port': '80',
+  //'enableSSL': true,
+  //'clientKey': 'client.pem',
+  //'clientCert': 'client.pem',
+  //'ca': 'ca.pem'
 });
 
 
