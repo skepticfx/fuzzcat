@@ -2,13 +2,14 @@ Fuzzcat
 =======
 Super fast network fuzzer written in node.js
 
+![Alt text](https://raw.githubusercontent.com/skepticfx/fuzzcat/master/meta/fuzzcat-fuzzSSH.png "Web GUI")
+
 ## Installation
 
 * Make sure you have Radamsa command line installed. Its an easy install form here: https://code.google.com/p/ouspg/wiki/Radamsa
 * Then do a `npm install fuzzcat`
 
 ## Usage
-
 
 ````
 var fuzzcat = require('fuzzcat');
