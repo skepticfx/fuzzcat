@@ -2,6 +2,16 @@ Fuzzcat
 =======
 Super fast network fuzzer written in node.js
 
+## Installation
+
+* Make sure you have Radamsa command line installed. Its an easy install form here: https://code.google.com/p/ouspg/wiki/Radamsa
+* Then do a `npm install fuzzcat`
+
+## Usage
+
+* Take a look at the examples to get an idea of how to fuzz.
+* TODO: More doc on usage.
+
 ## Features
 
 * Supports SSL with Client certificates.
@@ -14,6 +24,7 @@ Super fast network fuzzer written in node.js
 * More robust test cases
 
 ## License
+
 The MIT License (MIT)
 
 Copyright (c) Ahamed Nafeez
