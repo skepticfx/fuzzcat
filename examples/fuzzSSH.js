@@ -1,9 +1,9 @@
-var fuzzcat = require('../');
+var fuzzcat = require('../index');
 
 var fuzzer = new fuzzcat.Fuzzer({
-  'host': 'facebook.com',
-  'port': '443',
-  'enableSSL': true
+  'host': 'scanme.nmap.org',
+  'port': '22',
+  'enableSSL': false
 });
 
 

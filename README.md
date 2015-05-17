@@ -9,7 +9,28 @@ Super fast network fuzzer written in node.js
 
 ## Usage
 
+
+````
+var fuzzcat = require('fuzzcat');
+
+var fuzzer = new fuzzcat.Fuzzer({
+  'host': 'scanme.nmap.org',
+  'port': '22',
+  'enableSSL': false // Do not use an SSL Transport layer. Rather do normal TCP Fuzz.
+});
+
+
+fuzzer
+  .addPayload(new Buffer("1000050101000000210000000afcf21f0000", 'hex')) // Add as much payloads as you would like
+  .logFuzz() // Log your fuzz activity on the command line
+  .setOption('delay', 1000) // Delay between each packet
+  .serve(5000) // PORT to serve the web GUI about Fuzz stats
+  .start()
+
+````
+
 * Take a look at the examples to get an idea of how to fuzz.
+* Use Fuzzcat.serve(PORT) to enable the Web UI
 * TODO: More doc on usage.
 
 ## Features
@@ -22,6 +43,8 @@ Super fast network fuzzer written in node.js
 
 * Make it easy to construct binary protocols and fuzz them.
 * More robust test cases
+* Make adding advanced payloads more easier
+* Add ablilty to choose between UDP/TCP just like the SSL/Non-SSL one.
 
 ## License
 
