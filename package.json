@@ -26,7 +26,7 @@
   "homepage": "https://github.com/skepticfx/fuzzcat",
   "dependencies": {
     "debug": "^2.0.0",
-    "should": "^4.0.4",
+    "should": "^13.0.0",
     "node-radamsa": "^0.4.0",
     "tlsecho": "^0.3.0",
     "static-favicon": "^2.0.0-alpha",
