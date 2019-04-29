@@ -27,7 +27,7 @@
   "dependencies": {
     "debug": "^2.0.0",
     "should": "^4.0.4",
-    "node-radamsa": "^0.3.0",
+    "node-radamsa": "^0.4.0",
     "tlsecho": "^0.3.0",
     "static-favicon": "^2.0.0-alpha",
     "ejs": "^1.0.0",
