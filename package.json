@@ -36,7 +36,7 @@
     "body-parser": "^1.8.1",
     "express": "^4.9.0",
     "superagent": "^0.18.2",
-    "socket.io": "^1.1.0"
+    "socket.io": "^2.0.0"
   },
   "devDependencies": {
     "mocha": "1.21.5"
